@@ -1,0 +1,75 @@
+def mostrar_menu():
+    menu = """
+    __________MENU________
+    [1] - Depositar
+    [2] - Sacar
+    [3] - Extrato
+    [4] - Sair
+    _______________________
+    """
+    print(menu)
+
+def depositar(saldo, extrato):
+    valor = float(input("Digite o valor do depósito: "))
+    if valor > 0:
+        saldo += valor
+        extrato += f"Depósito: R$ {valor:.2f}\n"
+        print(f"Você realizou um depósito de R$ {valor:.2f}")
+    else:
+        print("A operação falhou! Tente novamente.")
+    return saldo, extrato
+
+def sacar(saldo, extrato, numero_saque, LIMITE_SAQUES, limite):
+    valor = float(input("Informe o valor que deseja sacar: "))
+    
+    saldo_insuficiente = valor > saldo
+    limite_insuficiente = valor > limite
+    excedeu_saques = numero_saque >= LIMITE_SAQUES
+    
+    if valor > 0 and not saldo_insuficiente and not limite_insuficiente and not excedeu_saques:
+        saldo -= valor
+        extrato += f"Saque: R$ {valor:.2f}\n"
+        numero_saque += 1
+        print(f"Você realizou um saque de R$ {valor:.2f}")
+    elif saldo_insuficiente:
+        print("Saldo insuficiente para realizar a operação!")
+    elif limite_insuficiente:
+        print("Você não possui limite disponível para realizar essa operação!")
+    elif excedeu_saques:
+        print("A operação não pode ser realizada, pois você atingiu o limite diário de saques!")
+    else:
+        print("A operação falhou!")
+    
+    return saldo, extrato, numero_saque
+
+def mostrar_extrato(saldo, extrato):
+    print("\n__________EXTRATO__________")
+    print("Não foram realizadas movimentações no período." if not extrato else extrato)
+    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("________________________________")
+
+def main():
+    saldo = 0
+    limite = 500
+    extrato = ""
+    numero_saque = 0
+    LIMITE_SAQUES = 3
+    
+    while True:
+        mostrar_menu()
+        opcao = int(input("Escolha a opção desejada: "))
+        
+        if opcao == 1:
+            saldo, extrato = depositar(saldo, extrato)
+        elif opcao == 2:
+            saldo, extrato, numero_saque = sacar(saldo, extrato, numero_saque, LIMITE_SAQUES, limite)
+        elif opcao == 3:
+            mostrar_extrato(saldo, extrato)
+        elif opcao == 4:
+            print("Saindo, obrigado por utilizar nossos serviços!")
+            break
+        else:
+            print("Operação falhou. Tente novamente!")
+
+if __name__ == "__main__":
+    main()
